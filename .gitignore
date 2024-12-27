@@ -1,3 +1,7 @@
+# jdt.ls
+.classpath
+.project
+.settings/
 # Built application files
 *.apk
 *.aar
