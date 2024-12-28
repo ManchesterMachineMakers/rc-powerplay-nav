@@ -143,7 +143,7 @@ public class DriveBase {
         return this;
       }
 
-      public Builder withPower(int power) {
+      public Builder withPower(double power) {
         return withPower(new PowerLevels(power, power, power, power));
       }
 
@@ -163,7 +163,7 @@ public class DriveBase {
         return this;
       }
 
-      public Builder withPolar(double rho, double theta, int maxPower) {
+      public Builder withPolar(double rho, double theta, double maxPower) {
         PolarSegment segment = new PolarSegment(rho, theta);
         Ticks ticks = segment.calculateTicks();
 
@@ -174,7 +174,7 @@ public class DriveBase {
        * @see Builder#withPolar(double, double, int)
        *      Like withPolar(), but using millimeters for rho instead of ticks
        */
-      public Builder withPolarMM(double rho, double theta, int maxPower) {
+      public Builder withPolarMM(double rho, double theta, double maxPower) {
         return this.withPolar(rho * motorEncoderEventsPerMM, theta, maxPower);
       }
 
@@ -212,5 +212,21 @@ public class DriveBase {
         return new Ticks(lf, lr, rf, rr);
       }
     }
+  }
+
+  public void runPolar(double rho, double theta, double maxPower) {
+    Movement
+        .builder()
+        .withPolar(rho, theta, maxPower)
+        .build()
+        .run(this);
+  }
+
+  public void runPolarMM(double rho, double theta, double maxPower) {
+    Movement
+        .builder()
+        .withPolarMM(rho, theta, maxPower)
+        .build()
+        .run(this);
   }
 }
