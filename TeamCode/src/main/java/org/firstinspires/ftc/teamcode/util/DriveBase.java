@@ -116,20 +116,20 @@ public class DriveBase {
       }
     }
 
-    Optional<PowerLevels> power = Optional.empty();
-    Optional<Ticks> ticks = Optional.empty();
+    PowerLevels power;
+    Ticks ticks;
 
     public void run(DriveBase driveBase) {
-      if (ticks.isPresent()) {
+      if (ticks != null) {
         driveBase.eachMotor((motor) -> motor.setMode(RunMode.RUN_USING_ENCODER));
 
-        Ticks relativeTicks = ticks.get().relativeTo(driveBase);
+        Ticks relativeTicks = ticks.relativeTo(driveBase);
         relativeTicks.accept(driveBase);
         driveBase.eachMotor((motor) -> motor.setMode(RunMode.RUN_TO_POSITION));
       }
 
-      if (power.isPresent())
-        power.get().accept(driveBase);
+      if (power != null)
+        power.accept(driveBase);
     }
 
     public static class Builder {
@@ -139,7 +139,7 @@ public class DriveBase {
       }
 
       public Builder withPower(PowerLevels powerLevels) {
-        movement.power = Optional.ofNullable(powerLevels);
+        movement.power = powerLevels;
         return this;
       }
 
@@ -148,7 +148,7 @@ public class DriveBase {
       }
 
       public Builder withTicks(Ticks ticks) {
-        movement.ticks = Optional.ofNullable(ticks);
+        movement.ticks = ticks;
         return this;
       }
 
@@ -157,9 +157,7 @@ public class DriveBase {
       }
 
       public Builder withTolerance(int tolerance) {
-        if (movement.ticks.isPresent()) {
-          movement.ticks.get().tolerance = tolerance;
-        }
+        if(movement.ticks != null) movement.ticks.tolerance = tolerance;
         return this;
       }
 
@@ -171,7 +169,7 @@ public class DriveBase {
       }
 
       /**
-       * @see Builder#withPolar(double, double, int)
+       * @see Builder#withPolar(double, double, double)
        *      Like withPolar(), but using millimeters for rho instead of ticks
        */
       public Builder withPolarMM(double rho, double theta, double maxPower) {
